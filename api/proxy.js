@@ -1,6 +1,6 @@
 // /api/proxy.js
 
-import fetch from "node-fetch";
+const fetch = require("node-fetch");
 
 export default async function handler(req, res) {
   // This function will proxy the request to the Binance API
