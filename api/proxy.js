@@ -58,13 +58,13 @@ export default async function handler(req, res) {
     });
 
     const data = await apiResponse.json();
-    const price = data.data[0].adv.price;
+    // const price = data.data[0].adv.price;
 
-    // Save the price to the JSON file
-    const date = new Date().toISOString().split("T")[0]; // Current date
-    const prices = readPricesFromFile();
-    prices[tradeType].push({ date, price });
-    writePricesToFile(prices);
+    // // Save the price to the JSON file
+    // const date = new Date().toISOString().split("T")[0]; // Current date
+    // const prices = readPricesFromFile();
+    // prices[tradeType].push({ date, price });
+    // writePricesToFile(prices);
 
     res.status(200).json(data);
   } catch (error) {
