@@ -1,6 +1,37 @@
-// /api/proxy.js
-
 const fetch = require("node-fetch");
+const fs = require("fs");
+const path = require("path");
+
+const pricesFilePath = path.join(process.cwd(), "prices.json");
+
+const readPricesFromFile = () => {
+  try {
+    if (fs.existsSync(pricesFilePath)) {
+      const data = fs.readFileSync(pricesFilePath, "utf-8");
+      return JSON.parse(data);
+    } else {
+      // Initialize the file if it does not exist
+      const initialData = { BUY: [], SELL: [], BUY_USD: [] };
+      fs.writeFileSync(
+        pricesFilePath,
+        JSON.stringify(initialData, null, 2),
+        "utf-8"
+      );
+      return initialData;
+    }
+  } catch (error) {
+    console.error("Error reading prices file:", error);
+    return { BUY: [], SELL: [], BUY_USD: [] };
+  }
+};
+
+const writePricesToFile = (data) => {
+  try {
+    fs.writeFileSync(pricesFilePath, JSON.stringify(data, null, 2), "utf-8");
+  } catch (error) {
+    console.error("Error writing prices file:", error);
+  }
+};
 
 export default async function handler(req, res) {
   const url = "https://p2p.binance.com/bapi/c2c/v2/friendly/c2c/adv/search";
@@ -46,6 +77,18 @@ export default async function handler(req, res) {
     });
 
     const data = await apiResponse.json();
+    const price = data.data[0].adv.price;
+
+    // Save the price to the JSON file
+    const date = new Date().toISOString().split("T")[0]; // Current date
+    const prices = readPricesFromFile();
+    if (prices[tradeType]) {
+      prices[tradeType].push({ date, price });
+    } else {
+      prices[tradeType] = [{ date, price }];
+    }
+    writePricesToFile(prices);
+
     res.status(200).json(data);
   } catch (error) {
     console.error("Error contacting Binance API", error);
