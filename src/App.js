@@ -7,16 +7,20 @@ function App() {
   const [sellPrice, setSellPrice] = useState("...");
   const [buyUSDPrice, setBuyUSDPrice] = useState("...");
 
-  useEffect(() => {
-    const fetchData = async (tradeType) => {
-      const response = await fetch(`/api/proxy?tradeType=${tradeType}`);
-      const data = await response.json();
-      return data.data[0].adv.price;
-    };
+  const fetchData = async (tradeType) => {
+    const response = await fetch(`/api/proxy?tradeType=${tradeType}`);
+    const data = await response.json();
+    return data.data[0].adv.price;
+  };
 
+  const refreshData = async () => {
     fetchData("BUY").then((price) => setBuyPrice(price));
     fetchData("SELL").then((price) => setSellPrice(price));
     fetchData("BUY_USD").then((price) => setBuyUSDPrice(price));
+  };
+
+  useEffect(() => {
+    refreshData();
   }, []);
 
   return (
@@ -58,6 +62,13 @@ function App() {
           <p>
             <strong>{buyUSDPrice}</strong>{" "}
             <span style={{ fontSize: "smaller" }}>USD</span>
+          </p>
+        </a>
+
+        <a onClick={refreshData} className="card" style={{ cursor: "pointer" }}>
+          <h2>⟳</h2>
+          <p>
+            <span style={{ fontSize: "smaller" }}>refresh</span>
           </p>
         </a>
       </div>
