@@ -1,6 +1,5 @@
-import logo from "./logo.svg";
-import "./App.css";
 import React, { useState, useEffect } from "react";
+import "./App.css";
 
 function App() {
   const [buyPrice, setBuyPrice] = useState("...");
@@ -18,6 +17,23 @@ function App() {
     fetchData("SELL").then((price) => setSellPrice(price));
     fetchData("BUY_USD").then((price) => setBuyUSDPrice(price));
   }, []);
+
+  const handleDownload = () => {
+    fetch("/api/download")
+      .then((response) => response.blob())
+      .then((blob) => {
+        const url = window.URL.createObjectURL(new Blob([blob]));
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", "prices.json");
+        document.body.appendChild(link);
+        link.click();
+        link.parentNode.removeChild(link);
+      })
+      .catch((error) =>
+        console.error("Error downloading the JSON file:", error)
+      );
+  };
 
   return (
     <main className="main">
@@ -58,6 +74,17 @@ function App() {
           <p>
             <strong>{buyUSDPrice}</strong>{" "}
             <span style={{ fontSize: "smaller" }}>USD</span>
+          </p>
+        </a>
+
+        <a
+          onClick={handleDownload}
+          className="card"
+          style={{ cursor: "pointer" }}
+        >
+          <h2>Data</h2>
+          <p>
+            <span style={{ fontSize: "smaller" }}>.json</span>
           </p>
         </a>
       </div>
