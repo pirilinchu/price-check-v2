@@ -5,6 +5,7 @@ import React, { useState, useEffect } from "react";
 function App() {
   const [buyPrice, setBuyPrice] = useState("...");
   const [sellPrice, setSellPrice] = useState("...");
+  const [buyUSDPrice, setBuyUSDPrice] = useState("...");
 
   useEffect(() => {
     const fetchData = async (tradeType) => {
@@ -15,6 +16,7 @@ function App() {
 
     fetchData("BUY").then((price) => setBuyPrice(price));
     fetchData("SELL").then((price) => setSellPrice(price));
+    fetchData("BUY_USD").then((price) => setBuyUSDPrice(price));
   }, []);
 
   return (
@@ -43,6 +45,19 @@ function App() {
           <p>
             <strong>{sellPrice}</strong>{" "}
             <span style={{ fontSize: "smaller" }}>BOB</span>
+          </p>
+        </a>
+
+        <a
+          href="https://p2p.binance.com/en/trade/buy/USDT?fiat=USD&payment=BANK"
+          className="card"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <h2>Buy</h2>
+          <p>
+            <strong>{buyUSDPrice}</strong>{" "}
+            <span style={{ fontSize: "smaller" }}>USD</span>
           </p>
         </a>
       </div>
