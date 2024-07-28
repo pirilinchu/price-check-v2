@@ -1,3 +1,5 @@
+// /api/proxy.js
+
 const fetch = require("node-fetch");
 const fs = require("fs");
 const path = require("path");
@@ -5,9 +7,6 @@ const path = require("path");
 const pricesFilePath = path.join(process.cwd(), "prices.json");
 
 const readPricesFromFile = () => {
-  if (!fs.existsSync(pricesFilePath)) {
-    return { BUY: [], SELL: [], BUY_USD: [] };
-  }
   return JSON.parse(fs.readFileSync(pricesFilePath, "utf-8"));
 };
 
@@ -64,9 +63,6 @@ export default async function handler(req, res) {
     // Save the price to the JSON file
     const date = new Date().toISOString().split("T")[0]; // Current date
     const prices = readPricesFromFile();
-    if (!prices[tradeType]) {
-      prices[tradeType] = [];
-    }
     prices[tradeType].push({ date, price });
     writePricesToFile(prices);
 
