@@ -10,7 +10,7 @@ function App() {
   const fetchData = async (tradeType) => {
     const response = await fetch(`/api/proxy?tradeType=${tradeType}`);
     const data = await response.json();
-    return data.data[5].adv.price;
+    return data.data[tradeType == "BUY_USD" ? 1 : 4].adv.price;
   };
 
   const refreshData = async () => {
