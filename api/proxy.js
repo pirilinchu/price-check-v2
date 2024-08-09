@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   let bodyPayload = {
     fiat: "BOB",
     page: 1,
-    rows: 1,
+    rows: 10,
     tradeType: tradeType,
     asset: "USDT",
     countries: [],
